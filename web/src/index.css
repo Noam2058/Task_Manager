@@ -1,0 +1,101 @@
+@import '@fontsource/heebo/400.css';
+@import '@fontsource/heebo/500.css';
+@import '@fontsource/heebo/600.css';
+@import '@fontsource/heebo/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ======================== טוקנים — בהיר ======================== */
+:root, .light {
+  --bg: #F4F5F9; --surface: #FFFFFF; --surface-2: #F1F3F8; --surface-3: #E8EBF2;
+  --border: #E3E6EE; --border-strong: #CDD2DE;
+  --text: #1B1F2E; --text-muted: #5F6780; --text-subtle: #8C93A8;
+  --primary: #5B5FEF; --primary-hover: #4B4FE0; --primary-soft: #ECEDFE; --primary-fg: #FFFFFF;
+  --success: #00A86B; --warning: #F5A524; --danger: #E2445C; --danger-soft: #FDECEF; --focus: #5B5FEF55;
+  --status-todo: #9AA0B4; --status-progress: #FDAB3D; --status-bugfix: #D9468F; --status-stuck: #E2445C; --status-done: #00C875;
+  --prio-low: #579BFC; --prio-medium: #A25DDC; --prio-high: #FF7575; --prio-critical: #BB3354;
+  --radius-sm: 6px; --radius: 10px; --radius-lg: 14px; --radius-xl: 20px;
+  --shadow-xs: 0 1px 2px rgb(16 24 40 / .05);
+  --shadow-sm: 0 1px 3px rgb(16 24 40 / .08), 0 1px 2px rgb(16 24 40 / .04);
+  --shadow-md: 0 6px 16px rgb(16 24 40 / .08);
+  --shadow-lg: 0 16px 40px rgb(16 24 40 / .14);
+  --shadow-card: 0 1px 2px rgb(16 24 40 / .04), 0 0 0 1px var(--border);
+  --sidebar-w: 264px; --sidebar-w-collapsed: 68px;
+  --glass: rgb(255 255 255 / .78);
+  --ease: cubic-bezier(.2,.8,.2,1);
+  color-scheme: light;
+}
+
+/* ======================== כהה — כחלחל עמוק, לא שחור ======================== */
+.dark {
+  --bg: #0F1118; --surface: #171A25; --surface-2: #1F2331; --surface-3: #282D3F;
+  --border: #2A2F42; --border-strong: #3A4060;
+  --text: #ECEEF5; --text-muted: #A2A9C0; --text-subtle: #737B96;
+  --primary: #7C80FF; --primary-hover: #9295FF; --primary-soft: #23274A; --primary-fg: #FFFFFF;
+  --danger-soft: #3A1E26; --focus: #7C80FF66;
+  --status-todo: #6B7290; --prio-critical: #E05A7A;
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / .25);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / .3), 0 1px 2px rgb(0 0 0 / .2);
+  --shadow-md: 0 8px 20px rgb(0 0 0 / .35);
+  --shadow-lg: 0 18px 44px rgb(0 0 0 / .45);
+  --shadow-card: 0 0 0 1px var(--border), inset 0 1px 0 rgb(255 255 255 / .03);
+  --glass: rgb(23 26 37 / .8);
+  color-scheme: dark;
+}
+
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+  body { @apply bg-bg text-text font-sans text-base antialiased; font-feature-settings: 'ss01'; }
+  :focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus); border-radius: var(--radius-sm); }
+  ::selection { background: var(--primary-soft); }
+  * { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+}
+
+@layer utilities {
+  .tabular { font-variant-numeric: tabular-nums; }
+  [dir='rtl'] .icon-flip { transform: scaleX(-1); }
+  .glass { background: var(--glass); backdrop-filter: saturate(1.6) blur(14px); -webkit-backdrop-filter: saturate(1.6) blur(14px); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .card { background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}
+
+/* ======================== Markdown ======================== */
+.prose-md { line-height: 1.7; }
+.prose-md h1 { @apply text-lg font-bold mt-4 mb-2; }
+.prose-md h2 { @apply text-md font-bold mt-3 mb-2; }
+.prose-md h3 { @apply font-semibold mt-3 mb-1; }
+.prose-md p { @apply my-2; }
+.prose-md ul { @apply list-disc ps-5 my-2; }
+.prose-md ol { @apply list-decimal ps-5 my-2; }
+.prose-md code { @apply bg-surface-2 rounded px-1 text-sm; }
+.prose-md pre { @apply bg-surface-2 rounded p-3 overflow-x-auto text-sm my-2; direction: ltr; }
+.prose-md a { @apply text-primary underline underline-offset-2; }
+.prose-md blockquote { @apply border-s-4 border-border-strong ps-3 text-muted my-2; }
+.prose-md input[type=checkbox] { @apply me-1; }
+
+/* ======================== FullCalendar ======================== */
+.fc {
+  --fc-border-color: var(--border); --fc-page-bg-color: var(--surface); --fc-neutral-bg-color: var(--surface-2);
+  --fc-today-bg-color: transparent; --fc-event-border-color: transparent; --fc-list-event-hover-bg-color: var(--surface-2);
+  font-family: inherit; font-size: 13px;
+}
+.fc .fc-toolbar-title { font-size: 20px; font-weight: 700; }
+.fc .fc-col-header-cell-cushion { color: var(--text-muted); font-weight: 500; padding: 8px 4px; }
+.fc .fc-daygrid-day-number { color: var(--text-muted); font-weight: 500; padding: 6px 8px; }
+.fc .fc-day-today .fc-daygrid-day-number { background: var(--primary); color: #fff; border-radius: 9999px; min-width: 26px; text-align: center; margin: 4px; padding: 2px 6px; }
+.fc .fc-day-sat { background: var(--surface-2); }
+.fc .fc-event { border-radius: 6px; padding: 1px 6px; font-weight: 500; cursor: pointer; }
+.fc .fc-more-popover { box-shadow: var(--shadow-lg); border-radius: var(--radius); background: var(--surface); }
+.fc .fc-button { background: var(--surface) !important; border: 1px solid var(--border) !important; color: var(--text) !important; box-shadow: none !important; font-weight: 500; text-transform: none; }
+.fc .fc-button:hover { background: var(--surface-2) !important; }
+.fc .fc-bg-event { opacity: 1; }
+.fc-theme-standard td, .fc-theme-standard th, .fc-theme-standard .fc-scrollgrid { border-color: var(--border); }

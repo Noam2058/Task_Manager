@@ -1,0 +1,6 @@
+# קטע רלוונטי ל-supabase CLI (supabase init יוצר קובץ מלא — אפשר למזג)
+[functions.ics]
+verify_jwt = false
+
+[functions.push-reminders]
+verify_jwt = false
