@@ -2,7 +2,11 @@
 // לפרוס עם: supabase functions deploy ics --no-verify-jwt
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
-const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+const SECRET_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || (() => {
+  // פרויקטים חדשים: מפתחות sb_secret_ ב-SUPABASE_SECRET_KEYS (JSON)
+  try { const j = JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS') ?? '{}'); return j.default ?? Object.values(j)[0] ?? ''; } catch { return ''; }
+})();
+const admin = createClient(Deno.env.get('SUPABASE_URL')!, SECRET_KEY as string, { auth: { persistSession: false } });
 
 const esc = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
 

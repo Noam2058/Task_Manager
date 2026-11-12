@@ -4,7 +4,10 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import webpush from 'npm:web-push@3.6.7';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
-const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const SECRET_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || (() => {
+  // פרויקטים חדשים: מפתחות sb_secret_ ב-SUPABASE_SECRET_KEYS (JSON)
+  try { const j = JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS') ?? '{}'); return j.default ?? Object.values(j)[0] ?? ''; } catch { return ''; }
+})();
 const CRON_SECRET = Deno.env.get('CRON_SECRET') ?? '';
 
 webpush.setVapidDetails(
@@ -13,7 +16,7 @@ webpush.setVapidDetails(
   Deno.env.get('VAPID_PRIVATE_KEY')!,
 );
 
-const admin = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
+const admin = createClient(SUPABASE_URL, SECRET_KEY as string, { auth: { persistSession: false } });
 const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type' };
 
 function israelNow() {
