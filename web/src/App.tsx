@@ -123,7 +123,7 @@ export default function App() {
   const session = useSession();
   return (
     <TooltipProvider delayDuration={300}>
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || undefined} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         {session === undefined ? <Splash /> : session ? <AuthedApp /> : <Login />}
       </BrowserRouter>
       <ConfirmDialogHost />

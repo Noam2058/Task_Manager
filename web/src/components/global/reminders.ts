@@ -19,7 +19,7 @@ export function useReminders() {
         const key = `${x.id}|${t}|${x.due_time}`;
         if (now >= at && now.getTime() - at.getTime() < 30 * 60000 && !sent[key] && x.reminded_key !== `${t} ${x.due_time}`) {
           sent[key] = 1;
-          navigator.serviceWorker?.ready.then((r) => r.showNotification(x.title, { body: `תזכורת · ${x.due_time}`, icon: '/icon-192.png', tag: key, data: { url: `/today?task=${x.id}` } }))
+          navigator.serviceWorker?.ready.then((r) => r.showNotification(x.title, { body: `תזכורת · ${x.due_time}`, icon: `${import.meta.env.BASE_URL}icon-192.png`, tag: key, data: { url: `/today?task=${x.id}` } }))
             .catch(() => new Notification(x.title, { body: `תזכורת · ${x.due_time}` }));
         }
       }

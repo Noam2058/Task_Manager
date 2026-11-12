@@ -118,7 +118,7 @@ export function FocusMode() {
 
 function notify(title: string, body: string) {
   try {
-    if ('Notification' in window && Notification.permission === 'granted') new Notification(title, { body, icon: '/icon-192.png' });
+    if ('Notification' in window && Notification.permission === 'granted') new Notification(title, { body, icon: `${import.meta.env.BASE_URL}icon-192.png` });
     navigator.vibrate?.([200, 100, 200]);
   } catch { /* ignore */ }
 }

@@ -11,7 +11,8 @@ self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 // SPA: כל ניווט → index.html (עובד גם בלי רשת)
-registerRoute(new NavigationRoute(createHandlerBoundToURL('/index.html')));
+const SCOPE = self.registration.scope; // למשל https://noam2058.github.io/Task_Manager/
+registerRoute(new NavigationRoute(createHandlerBoundToURL(new URL('index.html', SCOPE).pathname)));
 registerRoute(({ request }) => request.destination === 'font', new CacheFirst({ cacheName: 'fonts' }));
 
 // ---------- Push ----------
@@ -20,8 +21,8 @@ self.addEventListener('push', (event) => {
   try { data = event.data?.json() ?? {}; } catch { data = { title: 'ניהול משימות', body: event.data?.text() }; }
   event.waitUntil(self.registration.showNotification(data.title ?? 'ניהול משימות', {
     body: data.body ?? '',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: new URL('icon-192.png', SCOPE).href,
+    badge: new URL('icon-192.png', SCOPE).href,
     tag: data.tag,
     dir: 'rtl',
     lang: 'he',
@@ -31,15 +32,17 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const url = (event.notification.data?.url as string) ?? '/today';
+  // נתיב פנימי (/today?task=…) — יחסית ל-scope של האפליקציה
+  const route = '/' + String(event.notification.data?.url ?? '/today').replace(/^\//, '');
+  const full = new URL(route.slice(1), SCOPE).href;
   event.waitUntil((async () => {
     const all = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     const client = all.find((c) => new URL(c.url).origin === self.location.origin);
     if (client) {
       await client.focus();
-      client.postMessage({ type: 'open-url', url });
+      client.postMessage({ type: 'open-url', url: route });
       return;
     }
-    await self.clients.openWindow(url);
+    await self.clients.openWindow(full);
   })());
 });
